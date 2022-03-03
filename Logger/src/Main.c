@@ -7,7 +7,11 @@
 // ========================================================
 //
 
-// int main(void)
-// {
-//     return -1;
-// }
+#ifndef TEST
+int main(void)
+#else
+int TestableMain(void)
+#endif
+{
+    return -1;
+}
