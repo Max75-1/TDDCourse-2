@@ -3,3 +3,5 @@ build/gcov
 build/logs 
 build/temp
 build/test
+
+vendor/**

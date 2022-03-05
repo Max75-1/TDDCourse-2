@@ -1,5 +1,6 @@
 #include "Core.h"
 #include "Main.h"
+#include "LED.h"
 
 //
 // NOTE: Do not attempt to test main() directly.
@@ -13,5 +14,6 @@ int main(void)
 int TestableMain(void)
 #endif
 {
-    return -1;
+	LED_Init();
+    return 0;
 }
