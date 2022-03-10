@@ -61,7 +61,7 @@ void test_DoubleAndPass_should_NotPostNumbersThatAreTooNegativeToDouble(void)
     DoubleAndPass();
 }
 
-int main(void) {
+/*int main(void) {
 
     UNITY_BEGIN();
     RUN_TEST(test_DoubleAndPass_should_DoNothingIfNotCalled);
@@ -71,4 +71,4 @@ int main(void) {
     RUN_TEST(test_DoubleAndPass_should_NotPostNumbersThatAreTooBigToDouble);
     RUN_TEST(test_DoubleAndPass_should_NotPostNumbersThatAreTooNegativeToDouble);
     return UNITY_END();
-}
+}*/
