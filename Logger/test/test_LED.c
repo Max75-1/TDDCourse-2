@@ -53,3 +53,13 @@ void test_LED_Toggle_should_ToggleTheCorrectOutput(void)
 	TEST_IGNORE_MESSAGE("Implement LED_Toggle");
 }
 
+void test_LED_On_should_EnableTheCorrectOutput(void)
+{
+	TEST_IGNORE_MESSAGE("Implement LED_On");
+}
+
+void test_LED_Off_should_DisableTheCorrectOutput(void)
+{
+	TEST_IGNORE_MESSAGE("Implement LED_Off");
+}
+
