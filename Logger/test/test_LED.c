@@ -1,6 +1,16 @@
 #include "unity.h"
 #include "LED.h"
 
+void setUp(void)
+{
+	LED_Init();
+}
+
+void tearDown(void)
+{
+
+}
+
 void test_LED_Init_Should_SetLEDsAsGPIO(void)
 {
 	LED_PINSEL=BIT_TO_MASK(LED_0_BIT) | BIT_TO_MASK(LED_1_BIT) | BIT_TO_MASK(LED_2_BIT) | BIT_TO_MASK(LED_3_BIT);
@@ -50,16 +60,46 @@ void test_LED_Init_Should_SetHighLED1AndSetLowOtherLEDs(void)
 
 void test_LED_Toggle_should_ToggleTheCorrectOutput(void)
 {
-	TEST_IGNORE_MESSAGE("Implement LED_Toggle");
+	LED_On(LED0);
+	LED_Toggle(LED0);
+	TEST_ASSERT_EQUAL_HEX32(0x3,LED_PORT->FIOCLR);
+
+	//TEST_IGNORE_MESSAGE("Implement LED_Toggle");
 }
 
 void test_LED_On_should_EnableTheCorrectOutput(void)
 {
-	TEST_IGNORE_MESSAGE("Implement LED_On");
+	LED_On(LED0);
+	TEST_ASSERT_EQUAL_HEX32(0x40000,LED_PORT->FIOSET);
+
+	LED_On(LED1);
+	TEST_ASSERT_EQUAL_HEX32(0x100000,LED_PORT->FIOSET);
+
+	LED_On(LED2);
+	TEST_ASSERT_EQUAL_HEX32(0x200000,LED_PORT->FIOSET);
+
+	LED_On(LED3);
+	TEST_ASSERT_EQUAL_HEX32(0x800000,LED_PORT->FIOSET);
+
+	//TEST_IGNORE_MESSAGE("Implement LED_On");
 }
 
 void test_LED_Off_should_DisableTheCorrectOutput(void)
 {
-	TEST_IGNORE_MESSAGE("Implement LED_Off");
+	LED_Off(LED0);
+	TEST_ASSERT_EQUAL_HEX32(0x40000,LED_PORT->FIOCLR);
+
+	LED_Off(LED1);
+	TEST_ASSERT_EQUAL_HEX32(0x100000,LED_PORT->FIOCLR);
+
+	LED_Off(LED2);
+	TEST_ASSERT_EQUAL_HEX32(0x200000,LED_PORT->FIOCLR);
+
+	LED_Off(LED3);
+	TEST_ASSERT_EQUAL_HEX32(0x800000,LED_PORT->FIOCLR);
+
+	//TEST_IGNORE_MESSAGE("Implement LED_Off");
 }
+
+
 

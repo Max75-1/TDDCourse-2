@@ -19,3 +19,53 @@ void LED_Init(void)
 	LED_PORT->FIOCLR=  BIT_TO_MASK(LED_1_BIT) | BIT_TO_MASK(LED_2_BIT) | BIT_TO_MASK(LED_3_BIT);
 
 }
+
+void LED_On(LED_ID_T id)
+{
+int LedBit;
+
+	switch(id){
+		case LED0 : LedBit=LED_0_BIT; break;
+		case LED1 : LedBit=LED_1_BIT; break;
+		case LED2 : LedBit=LED_2_BIT; break;
+		case LED3 : LedBit=LED_3_BIT; break;
+		default: return;
+	}
+
+	LED_PORT->FIOSET= BIT_TO_MASK(LedBit);
+}
+
+void LED_Off(LED_ID_T id)
+{
+int LedBit;
+
+	switch(id){
+		case LED0 : LedBit=LED_0_BIT; break;
+		case LED1 : LedBit=LED_1_BIT; break;
+		case LED2 : LedBit=LED_2_BIT; break;
+		case LED3 : LedBit=LED_3_BIT; break;
+		default: return;
+	}
+
+	LED_PORT->FIOCLR= BIT_TO_MASK(LedBit);
+}
+
+void LED_Toggle(LED_ID_T id)
+{
+int LedBit;
+uint32_t mask;
+
+	switch(id){
+		case LED0 : LedBit=LED_0_BIT; break;
+		case LED1 : LedBit=LED_1_BIT; break;
+		case LED2 : LedBit=LED_2_BIT; break;
+		case LED3 : LedBit=LED_3_BIT; break;
+		default: return;
+	}
+
+	mask=BIT_TO_MASK(LedBit);
+	if( (LED_PORT->FIOPIN & mask)==mask )
+		LED_PORT->FIOCLR= mask;
+	else
+		LED_PORT->FIOSET= mask;
+}
