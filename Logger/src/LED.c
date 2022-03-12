@@ -64,7 +64,7 @@ uint32_t mask;
 	}
 
 	mask=BIT_TO_MASK(LedBit);
-	if( (LED_PORT->FIOPIN & mask)==mask )
+	if( (LED_PORT->FIOSET & mask)==mask )
 		LED_PORT->FIOCLR= mask;
 	else
 		LED_PORT->FIOSET= mask;

@@ -33,13 +33,9 @@
   :test:
     - +:Logger/test/**
     - -:Logger/test/support
-    - +:test/**
-    - -:test/support
   :source:
-    - src
     - Logger/src
   :include:
-    - src
     - Logger/inc
     - Logger/src
   :support:
