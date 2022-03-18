@@ -2,6 +2,7 @@
 #define LED_H
 
 #include "Core.h"
+//#include "Timer.h"
 
 #define LED_PORT (LPC_GPIO1)
 #define LED_PINSEL (LPC_PINCON->PINSEL3)
@@ -18,5 +19,6 @@ void LED_Init(void);
 void LED_Toggle(LED_ID_T id);
 void LED_On(LED_ID_T id);
 void LED_Off(LED_ID_T id);
+void LED_Blink(LED_ID_T id);
 
 #endif // LED_H/

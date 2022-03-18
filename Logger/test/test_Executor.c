@@ -1,6 +1,7 @@
 #include "unity.h"
 #include "mock_LED.h"
 #include "mock_Digital.h"
+#include "mock_Analog.h"
 #include "Executor.h"
 
 void setUp(void)
@@ -151,4 +152,68 @@ void test_Executor_Exec_should_NotToggleLed2_when_Digital4And5AreLow(void)
 	LED_Off_Expect(LED2);
 
 	Executor_Exec();
+}
+
+void test_Executor_ADC_should_SetLED1On_when_ADC0BiggerThanADC1(void)
+{
+	ADC0=0x2;
+	ADC1=0x1;
+	ADC2=0x3;
+	ADC3=0x4;
+	ADC4=0x5;
+	ADC5=0x6;
+	Analog_GetChannel_ExpectAndReturn(ADC0,0x2);
+	Analog_GetChannel_ExpectAndReturn(ADC1,0x1);
+	LED_On_Expect(LED1);
+
+	Analog_GetChannel_ExpectAndReturn(ADC2,0x3);
+	Analog_GetChannel_ExpectAndReturn(ADC3,0x4);
+
+	Analog_GetChannel_ExpectAndReturn(ADC4,0x5);
+	Analog_GetChannel_ExpectAndReturn(ADC5,0x6);
+
+	Executor_CompareADC();
+	//TEST_ASSERT_FALSE(Executor_ADC());
+}
+
+void test_Executor_ADC_should_SetLED2On_when_ADC2BiggerThanADC3(void)
+{
+	ADC0=0x1;
+	ADC1=0x2;
+	ADC2=0x4;
+	ADC3=0x3;
+	ADC4=0x5;
+	ADC5=0x6;
+	Analog_GetChannel_ExpectAndReturn(ADC0,0x1);
+	Analog_GetChannel_ExpectAndReturn(ADC1,0x2);
+
+	Analog_GetChannel_ExpectAndReturn(ADC2,0x4);
+	Analog_GetChannel_ExpectAndReturn(ADC3,0x3);
+	LED_On_Expect(LED2);
+
+	Analog_GetChannel_ExpectAndReturn(ADC4,0x5);
+	Analog_GetChannel_ExpectAndReturn(ADC5,0x6);
+
+	Executor_CompareADC();
+}
+
+void test_Executor_ADC_should_SetLED3On_when_ADC4BiggerThanADC5(void)
+{
+	ADC0=0x1;
+	ADC1=0x2;
+	ADC2=0x3;
+	ADC3=0x4;
+	ADC4=0x6;
+	ADC5=0x5;
+	Analog_GetChannel_ExpectAndReturn(ADC0,0x1);
+	Analog_GetChannel_ExpectAndReturn(ADC1,0x2);
+
+	Analog_GetChannel_ExpectAndReturn(ADC2,0x3);
+	Analog_GetChannel_ExpectAndReturn(ADC3,0x4);
+
+	Analog_GetChannel_ExpectAndReturn(ADC4,0x6);
+	Analog_GetChannel_ExpectAndReturn(ADC5,0x5);
+	LED_On_Expect(LED3);
+
+	Executor_CompareADC();
 }
