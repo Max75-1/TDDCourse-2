@@ -1,4 +1,4 @@
-#include "unity.h"
+/*#include "unity.h"
 #include "Digital.h"
 
 void setUp(void)
@@ -32,4 +32,4 @@ void test_Digital_GetBits_should_ReadDigitalInputsAndReturnCurrentValues(void)
 	 TEST_ASSERT_EQUAL_HEX(0x0000003F, Digital_GetBits());
 
 	//TEST_IGNORE_MESSAGE("Implement Digital_GetBits");
-}
+}*/

@@ -1,4 +1,4 @@
-#include "Core.h"
+/*#include "Core.h"
 #include "unity.h"
 #include "cmock.h"
 #include "mock_Executor.h"
@@ -21,5 +21,5 @@ void test_Main_Should_InitializeTheDriversThenCallMainLoop(void)
     Executor_Exec_ExpectAndReturn(FALSE);
 
 	TEST_ASSERT_EQUAL(0,TestableMain());
-}
+}*/
 

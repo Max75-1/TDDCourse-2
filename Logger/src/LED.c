@@ -1,5 +1,5 @@
 #include "LED.h"
-#include "Timer.h"
+//#include "Timer.h"
 
 void LED_Init(void)
 {
@@ -20,6 +20,15 @@ void LED_Init(void)
 	LED_PORT->FIOCLR=  BIT_TO_MASK(LED_1_BIT) | BIT_TO_MASK(LED_2_BIT) | BIT_TO_MASK(LED_3_BIT);
 
 }
+
+/*void LED_Blink(LED_ID_T id)
+{
+	Timer_WaitMilli(250);
+	LED_Toggle(id);
+	Timer_WaitMilli(250);
+	LED_Toggle(id);
+
+}*/
 
 void LED_On(LED_ID_T id)
 {
@@ -71,11 +80,4 @@ uint32_t mask;
 		LED_PORT->FIOSET= mask;
 }
 
-/*void LED_Blink(LED_ID_T id)
-{
-	Timer_WaitMilli(250);
-	LED_Toggle(id);
-	Timer_WaitMilli(250);
-	LED_Toggle(id);
 
-}*/
