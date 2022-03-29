@@ -51,6 +51,13 @@ void Timer_WaitMilli(uint32_t msec)
     WAIT_UNTIL_EQUAL(TimeStamp, Goal);
 }
 
+uint32_t Timer_WaitRemainder(uint32_t StartStamp, uint32_t msec)
+{
+    uint32_t Goal = StartStamp + msec;
+    WAIT_UNTIL_EQUAL(TimeStamp, Goal);
+    return TimeStamp;
+}
+
 void SysTick_Handler(void)
 {
     TimeStamp += 10;

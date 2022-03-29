@@ -1,6 +1,8 @@
 #include "Core.h"
 #include "Main.h"
 #include "Executor.h"
+#include "Timer.h"
+
 
 //
 // NOTE: Do not attempt to test main() directly.
@@ -14,8 +16,13 @@ int main(void)
 int TestableMain(void)
 #endif
 {
-	Executor_Init();
+uint32_t LastTick;
 
-	while(Executor_Exec()){ /* Do nothing else */}
+	Executor_Init();
+	LastTick=Timer_GetStamp();
+
+	while(Executor_Exec()){
+		LastTick=Timer_WaitRemainder(LastTick, MAIN_TICK_MSEC );
+	}
     return 0;
 }
