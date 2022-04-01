@@ -5,6 +5,7 @@
 #include "Command_Conductor.h"
 
 MESSAGE_T msg;
+MESSAGE_T rsp;
 
 void setUp(void)
 {
@@ -43,16 +44,37 @@ void test_CommandConductor_Exec_should_CheckForMessages_and_DoNothingIfUnknown(v
 	CommandHardware_Exec_Expect();
 	CommandHardware_CheckForMsg_ExpectAnyArgsAndReturn(STATUS_OK);
 	CommandHardware_CheckForMsg_ReturnThruPtr_msg(&msg);
+	CommandHardware_SendError_ExpectAndReturn( &msg, STATUS_UNKNOWN_CMD, STATUS_OK );
 
 	CommandConductor_Exec();
 }
 
 void test_CommandConductor_Exec_should_CheckForMessages_and_ProccessIfVersionAndReturnResponse(void)
 {
-	TEST_IGNORE();
+	msg.Cmd = 'V'; //Version Command
+	rsp.Cmd = 'v'; //Something different to show it's a response
+
+	CommandHardware_Exec_Expect();
+	CommandHardware_CheckForMsg_ExpectAnyArgsAndReturn( STATUS_OK );
+	CommandHardware_CheckForMsg_ReturnThruPtr_msg( &msg );
+	CommandHandlerVersion_ExpectAndReturn( &msg, STATUS_OK );
+	CommandHandlerVersion_ReturnThruPtr_Msg( &rsp );
+	CommandHardware_SendResponse_ExpectAndReturn( &rsp, STATUS_OK );
+
+	CommandConductor_Exec();
 }
 
 void test_CommandConductor_Exec_should_CheckForMessages_and_ProccessIfVersionAndHandleErrors(void)
 {
-	TEST_IGNORE();
+	 msg.Cmd = 'V'; //Version Command
+	 rsp.Cmd = 'v'; //Something different to show it's a response
+
+	 CommandHardware_Exec_Expect();
+	 CommandHardware_CheckForMsg_ExpectAnyArgsAndReturn( STATUS_OK );
+	 CommandHardware_CheckForMsg_ReturnThruPtr_msg( &msg );
+	 CommandHandlerVersion_ExpectAndReturn( &msg, STATUS_EXTRA_ARG );
+	 CommandHandlerVersion_ReturnThruPtr_Msg( &rsp );
+	 CommandHardware_SendError_ExpectAndReturn( &rsp, STATUS_EXTRA_ARG, STATUS_OK );
+
+	 CommandConductor_Exec();
 }
