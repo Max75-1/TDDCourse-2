@@ -3,6 +3,7 @@
 #include "Command_Hardware.h"
 #include "mock_USBDriver.h"
 #include "mock_Parser.h"
+#include "Utils.h"
 
 void setUp(void)
 {
@@ -35,4 +36,34 @@ MESSAGE_T Msg={0};
 	Parser_AddChar_ExpectAndReturn('V',NULL);
 
 	TEST_ASSERT_EQUAL(STATUS_NONE_YET, CommandHardware_CheckForMsg(&Msg));
+}
+
+void test_CommandHardware_CheckForMsg_should_FillOutMsgStruct_when_ZeroLenPacketComplete(void)
+{
+char *Cmd="[V0]";
+MESSAGE_T Msg={0};
+
+	USBDriver_OkayToRead_ExpectAndReturn(TRUE);
+	USBDriver_GetChar_ExpectAndReturn(']');
+	Parser_AddChar_ExpectAndReturn(']',Cmd);
+
+	TEST_ASSERT_EQUAL(STATUS_OK, CommandHardware_CheckForMsg(&Msg));
+	TEST_ASSERT_EQUAL_HEX8('V',Msg.Cmd);
+	TEST_ASSERT_EQUAL_INT8(0,Msg.Len);
+}
+
+void test_CommandHardware_CheckForMsg_should_FillOutMsgStruct_when_MultiBytePacketComplete(void)
+{
+char *Cmd="[T20133]";
+MESSAGE_T Msg={0};
+uint8_t Data[]={0x01,0x33};
+
+	USBDriver_OkayToRead_ExpectAndReturn(TRUE);
+	USBDriver_GetChar_ExpectAndReturn(']');
+	Parser_AddChar_ExpectAndReturn(']',Cmd);
+
+	TEST_ASSERT_EQUAL(STATUS_OK, CommandHardware_CheckForMsg(&Msg));
+	TEST_ASSERT_EQUAL_HEX8('T',Msg.Cmd);
+	TEST_ASSERT_EQUAL_INT8(2,Msg.Len);
+	TEST_ASSERT_EQUAL_HEX8_ARRAY(Data,Msg.Data,2);
 }
