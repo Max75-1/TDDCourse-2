@@ -1,7 +1,11 @@
+#include "Core.h"
 #include "Command_Hardware.h"
 #include "USBDriver.h"
 #include "Parser.h"
+#include "Packer.h"
 #include "Utils.h"
+
+STATIC char DataOut[USB_MAX_BUFFER_LENGTH];
 
 STATUS_T CommandHardware_CheckForMsg(MESSAGE_T *msg)
 {
@@ -17,4 +21,16 @@ STATUS_T CommandHardware_CheckForMsg(MESSAGE_T *msg)
 	}
 
 	return STATUS_NONE_YET;
+}
+
+STATUS_T CommandHardware_SendResponse(MESSAGE_T *Msg)
+{
+char *PacketOut;
+
+	HexToBin(Msg->Data, DataOut, Msg->Len);
+	PacketOut=Packer_AddMsg(Msg->Cmd, Msg->Data, Msg->Len);
+	if(PacketOut==NULL)
+		return STATUS_BAD_MSG;
+
+	return STATUS_UNKNOWN_ERR;
 }

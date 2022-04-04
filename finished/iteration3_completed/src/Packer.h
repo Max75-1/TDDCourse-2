@@ -1,6 +1,8 @@
 #ifndef _PACKER_H
 #define _PACKER_H
 
+#include <stdint.h>
+
 #define PACKER_MAX_LEN  (75)
 
 char* Packer_AddMsg(char Cmd, char* Data, uint8_t Len);

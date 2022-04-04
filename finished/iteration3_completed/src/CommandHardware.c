@@ -3,6 +3,7 @@
 #include "Packer.h"
 #include "CommandHardware.h"
 #include "USBDriver.h"
+#include "Utils.h"
 
 STATIC char DataOut[USB_MAX_BUFFER_LENGTH];
 

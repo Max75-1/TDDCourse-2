@@ -4,6 +4,9 @@
 //#include "Defs.h"
 #include "Command_Conductor.h"
 
+#define USB_MAX_BUFFER_LENGTH    (256)
+
+
 void CommandHardware_Init(void);
 void CommandHardware_Exec(void);
 STATUS_T CommandHardware_CheckForMsg(MESSAGE_T *msg);
