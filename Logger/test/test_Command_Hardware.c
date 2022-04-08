@@ -77,3 +77,51 @@ MESSAGE_T Msg={'V',2, {0x1,0x2} };
 
 	TEST_ASSERT_EQUAL(STATUS_BAD_MSG, CommandHardware_SendResponse(&Msg));
 }
+
+void test_CommandHardware_SendResponse_should_SendBytes_when_MessagePacked(void)
+{
+MESSAGE_T Msg={'V',2, {0x1,0x2} };
+char *Packed = "[V20102]";
+
+	Packer_AddMsg_ExpectAndReturn('V',"0102",2, Packed);
+	USBDriver_PutChar_ExpectAndReturn('[', TRUE);
+	USBDriver_PutChar_ExpectAndReturn('V', TRUE);
+	USBDriver_PutChar_ExpectAndReturn('2', TRUE);
+	USBDriver_PutChar_ExpectAndReturn('0', TRUE);
+	USBDriver_PutChar_ExpectAndReturn('1', TRUE);
+	USBDriver_PutChar_ExpectAndReturn('0', TRUE);
+	USBDriver_PutChar_ExpectAndReturn('2', TRUE);
+	USBDriver_PutChar_ExpectAndReturn(']', TRUE);
+
+	TEST_ASSERT_EQUAL(STATUS_OK, CommandHardware_SendResponse(&Msg));
+}
+
+void test_CommandHardware_SendError_Should_SendBytes_When_MessagePacked(void)
+{
+    MESSAGE_T Msg = { '?', 2, { 0x01, 0x02 } };
+    char* Packed = "[E10B]";
+
+    Packer_AddMsg_ExpectAndReturn('E', "0B", 1, Packed);
+    USBDriver_PutChar_ExpectAndReturn('[', TRUE);
+    USBDriver_PutChar_ExpectAndReturn('E', TRUE);
+    USBDriver_PutChar_ExpectAndReturn('1', TRUE);
+    USBDriver_PutChar_ExpectAndReturn('0', TRUE);
+    USBDriver_PutChar_ExpectAndReturn('B', TRUE);
+    USBDriver_PutChar_ExpectAndReturn(']', TRUE);
+
+    TEST_ASSERT_EQUAL( STATUS_OK, CommandHardware_SendError(&Msg, STATUS_NONE_YET) );
+}
+
+void test_CommandHardware_SendError_Should_Complain_When_USBDriverOverflows(void)
+{
+    MESSAGE_T Msg = { '?', 2, { 0x01, 0x02 } };
+    char* Packed = "[E107]";
+
+    Packer_AddMsg_ExpectAndReturn('E', "07", 1, Packed);
+    USBDriver_PutChar_ExpectAndReturn('[', TRUE);
+    USBDriver_PutChar_ExpectAndReturn('E', TRUE);
+    USBDriver_PutChar_ExpectAndReturn('1', TRUE);
+    USBDriver_PutChar_ExpectAndReturn('0', FALSE);
+
+    TEST_ASSERT_EQUAL( STATUS_OVERFLOW, CommandHardware_SendError(&Msg, STATUS_BAD_MSG) );
+}

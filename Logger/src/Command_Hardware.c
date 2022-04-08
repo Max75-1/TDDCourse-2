@@ -27,10 +27,24 @@ STATUS_T CommandHardware_SendResponse(MESSAGE_T *Msg)
 {
 char *PacketOut;
 
-	HexToBin(Msg->Data, DataOut, Msg->Len);
-	PacketOut=Packer_AddMsg(Msg->Cmd, Msg->Data, Msg->Len);
+	BinToHex(Msg->Data, DataOut, Msg->Len);
+	PacketOut=Packer_AddMsg(Msg->Cmd, DataOut, Msg->Len);
 	if(PacketOut==NULL)
 		return STATUS_BAD_MSG;
 
-	return STATUS_UNKNOWN_ERR;
+	while(*PacketOut){
+		if(!(USBDriver_PutChar(*PacketOut++)))
+			return STATUS_OVERFLOW;
+	}
+
+	return STATUS_OK;
+}
+
+STATUS_T CommandHardware_SendError(MESSAGE_T* Msg, STATUS_T Error)
+{
+    Msg->Cmd = 'E';
+    Msg->Data[0] = Error;
+    Msg->Len = 1;
+
+    return CommandHardware_SendResponse(Msg);
 }
