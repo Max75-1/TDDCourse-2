@@ -1,19 +1,29 @@
-#include "Core.h"
 #include "USBDriver.h"
 #include <stdbool.h>
-#include "serial_api.h"
-#include "Buffer.h"
 
-#define USB_BUFFER_MAX (75)
 
-static serial_t USBDriver_serial;
-static uint8_t tx_data[USB_BUFFER_MAX];
-static uint8_t rx_data[USB_BUFFER_MAX];
-static BUFFER_T tx;
-static BUFFER_T rx;
 
-void USBDriver_Init(void) {}
-void USBDriver_Exec(void) {}
+
+void USBDriver_Init(void)
+{
+	serial_init(&USBDriver_serial, USBTX, USBRX);
+	serial_clear(&USBDriver_serial);
+
+	Buffer_Init(&tx, tx_data, USB_BUFFER_MAX);
+	Buffer_Init(&rx, rx_data, USB_BUFFER_MAX);
+
+	initialized=TRUE;
+}
+void USBDriver_Exec(void)
+{
+	if(serial_writable(&USBDriver_serial) && !Buffer_IsEmpty(&tx)){
+
+	}
+
+	if(serial_readable(&USBDriver_serial) && !Buffer_IsFull(&rx)){
+
+	}
+}
 
 bool USBDriver_Connected(void) { return FALSE; }
 bool USBDriver_OkayToRead() { return FALSE; }
