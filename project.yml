@@ -35,8 +35,10 @@
     - -:Logger/test/support
   :source:
     - Logger/src
+    - Logger/lib/src
   :include:
     - Logger/inc
+    - Logger/lib/inc
     - Logger/src
   :support:
     - Logger/test/support
