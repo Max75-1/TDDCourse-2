@@ -1,11 +1,5 @@
 #include "USBDriver.h"
-<<<<<<< HEAD
-
-=======
 #include <stdbool.h>
-
-
-
 
 void USBDriver_Init(void)
 {
@@ -17,7 +11,7 @@ void USBDriver_Init(void)
 
 	initialized=TRUE;
 }
->>>>>>> serial&USB
+
 void USBDriver_Exec(void)
 {
 	if(serial_writable(&USBDriver_serial) && !Buffer_IsEmpty(&tx)){
@@ -28,12 +22,8 @@ void USBDriver_Exec(void)
 
 	}
 }
-<<<<<<< HEAD
-=======
 
 bool USBDriver_Connected(void) { return FALSE; }
 bool USBDriver_OkayToRead() { return FALSE; }
 char USBDriver_GetChar(void) { return '!'; }
 bool USBDriver_PutChar(char Val) { return FALSE; }
-
->>>>>>> serial&USB
