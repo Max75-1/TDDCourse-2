@@ -14,16 +14,39 @@ void USBDriver_Init(void)
 
 void USBDriver_Exec(void)
 {
-	if(serial_writable(&USBDriver_serial) && !Buffer_IsEmpty(&tx)){
+uint8_t Val;
 
+	if( serial_writable(&USBDriver_serial) && !Buffer_IsEmpty(&tx) && (STATUS_OK==Buffer_Get(&tx, &Val))){
+		serial_putc(&USBDriver_serial, Val);
 	}
 
 	if(serial_readable(&USBDriver_serial) && !Buffer_IsFull(&rx)){
-
+		Val = serial_getc(&USBDriver_serial);
+		Buffer_Put(&rx, Val);
 	}
 }
 
-bool USBDriver_Connected(void) { return FALSE; }
+bool USBDriver_Connected(void)
+{
+	return initialized;
+}
+
 bool USBDriver_OkayToRead() { return FALSE; }
-char USBDriver_GetChar(void) { return '!'; }
-bool USBDriver_PutChar(char Val) { return FALSE; }
+char USBDriver_GetChar(void)
+{
+	 uint8_t Val;
+	 if (Buffer_Get(&rx, &Val) == STATUS_OK)
+	     return (char)Val;
+	 else
+	     return 0x00;
+}
+
+bool USBDriver_PutChar(char Val)
+{
+	if (Buffer_IsFull(&tx))
+	    return FALSE;
+
+	Buffer_Put(&tx, Val);
+
+	return TRUE;
+}

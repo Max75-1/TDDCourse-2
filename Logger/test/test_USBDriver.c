@@ -33,16 +33,97 @@ void test_USBDriver_Init_should_InitTheBuffers_and_ConfigureTheSerialPort(void)
 
 void test_USBDriver_Exec_should_DoNothing_when_NothingToWrite_and_NothingToRead(void)
 {
-	Buffer_IsEmpty_ExpectAndReturn(&tx, TRUE);
-	serial_readable_ExpectAndReturn(&USBDriver_serial, FALSE);
+	serial_writable_IgnoreAndReturn(TRUE);
+	Buffer_IsEmpty_IgnoreAndReturn(TRUE);
+	Buffer_IsFull_IgnoreAndReturn(FALSE);
+	serial_readable_IgnoreAndReturn(FALSE);
 
 	USBDriver_Exec();
 }
 
 void test_USBDriver_Exec_should_DoNothing_when_TooFullToWrite_and_TooFullToRead(void)
 {
-	serial_writable_ExpectAndReturn(&USBDriver_serial, FALSE);
-	Buffer_IsEmpty_ExpectAndReturn(&rx, TRUE);
+	serial_writable_IgnoreAndReturn(FALSE);
+	Buffer_IsEmpty_IgnoreAndReturn(FALSE);
+	Buffer_IsFull_IgnoreAndReturn(TRUE);
+	serial_readable_IgnoreAndReturn(TRUE);
 
 	USBDriver_Exec();
+}
+
+void test_USBDriver_Exec_should_WriteAByte_when_OneBufferedAndWritable(void)
+{
+uint8_t test_char='$';
+
+	serial_writable_IgnoreAndReturn(TRUE);
+	Buffer_IsEmpty_IgnoreAndReturn(FALSE);
+	Buffer_IsFull_IgnoreAndReturn(TRUE);
+	serial_readable_IgnoreAndReturn(TRUE);
+
+	Buffer_Get_ExpectAnyArgsAndReturn(STATUS_OK);
+	Buffer_Get_ReturnThruPtr_Val(&test_char);
+	serial_putc_Expect(&USBDriver_serial, test_char);
+
+	//Buffer_Get_ExpectAnyArgsAndReturn(STATUS_NONE_YET);
+
+	USBDriver_Exec();
+}
+
+void test_USBDriver_Exec_should_NotWriteAByte_when_CouldNotFetchByte(void)
+{
+//uint8_t test_char='$';
+
+	serial_writable_IgnoreAndReturn(TRUE);
+	Buffer_IsEmpty_IgnoreAndReturn(FALSE);
+	Buffer_IsFull_IgnoreAndReturn(TRUE);
+	serial_readable_IgnoreAndReturn(TRUE);
+
+	Buffer_Get_ExpectAnyArgsAndReturn(STATUS_NONE_YET);
+	//Buffer_Get_ReturnThruPtr_Val(&test_char);
+	//serial_putc_Expect(&USBDriver_serial, test_char);
+
+	USBDriver_Exec();
+}
+
+void test_USBDriver_Exec_should_WriteBytes_when_BytesBufferedAndWritable(void)
+{
+    uint8_t a = 'A';
+    uint8_t b = 'B';
+    //uint8_t c = 'C';
+
+    //The first time through the loop, we have a character
+    serial_writable_IgnoreAndReturn(TRUE);
+    Buffer_IsEmpty_IgnoreAndReturn(FALSE);
+    Buffer_Get_ExpectAnyArgsAndReturn(STATUS_OK);
+    Buffer_Get_ReturnThruPtr_Val(&a);
+    serial_putc_Expect(&USBDriver_serial, a);
+
+    Buffer_IsFull_IgnoreAndReturn(TRUE);
+    serial_readable_IgnoreAndReturn(TRUE);
+
+    USBDriver_Exec();
+
+    //The second time through the loop, we have a character
+    serial_writable_IgnoreAndReturn(TRUE);
+    Buffer_IsEmpty_IgnoreAndReturn(FALSE);
+    Buffer_Get_ExpectAnyArgsAndReturn(STATUS_OK);
+    Buffer_Get_ReturnThruPtr_Val(&b);
+    serial_putc_Expect(&USBDriver_serial, b);
+
+    Buffer_IsFull_IgnoreAndReturn(TRUE);
+    serial_readable_IgnoreAndReturn(TRUE);
+
+    USBDriver_Exec();
+
+    //The third time through the loop, we have a character
+    /*serial_writable_IgnoreAndReturn(TRUE);
+    Buffer_IsEmpty_IgnoreAndReturn(FALSE);
+    Buffer_Get_ExpectAnyArgsAndReturn(STATUS_OK);
+    Buffer_Get_ReturnThruPtr_Val(&c);
+    serial_putc_Expect(&USBDriver_serial, c);*/
+
+    //The fourth time through the loop, we don't have a character any longer
+    Buffer_IsEmpty_IgnoreAndReturn(TRUE);
+
+    USBDriver_Exec();
 }
